@@ -22,7 +22,7 @@
             <div class="form-group">
                 <label class="form-control-label" for="ne_desc"><?= lang('ne_title') ?></label>
                 <input id="ne_title"  class="form-control" type="text" name="ne_title" value="<?= set_value('ne_title') ?>" />
-                <p class="text-red"><?= form_error('ne_title'); ?></p>
+                <p class="text-red"><?= form_error ('ne_title'); ?></p>
             </div>
 
             <div class="form-group">
@@ -39,8 +39,6 @@
             <div class="box-footer">
                 <button type="submit" class="btn btn-primary">save</button>
             </div>
-
-
         </form>
     </div>
 </div>

@@ -1,6 +1,11 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.12/datatables.min.css"/>
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.12/datatables.min.js"></script>
+
+<!-- <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.2.7/js/responsive.bootstrap4.min.js"></script> -->
 <script>
     $(document).ready(function() {
         $('#example').DataTable();
@@ -28,7 +33,7 @@
             <?php else : ?>
                 <form method="post" action="<?= base_url() ?>news/operation/">
                     <!-- Example table -->
-                    <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <table id="example-server-side" class="table table-striped table-bordered" cellspacing="0" width="100%">
                         <thead>
                         <tr>
                             <th class="center-block">
@@ -42,7 +47,7 @@
                             <th>Options</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <!--<tbody>
                         <?php $x = 1;
                         foreach ($news as $ph) : ?>
                             <tr>
@@ -61,7 +66,7 @@
                                 <td class="text-center">
                                     <a href="<?= base_url() ?>news/edit/<?= $ph['ne_id']; ?>"
                                        data-toggle="tooltip" class="btn btn-primary" data-original-title="edit ">
-                                        edit
+                                       edit
                                     </a>
 
                                     <a href="<?= base_url() ?>news/remove/<?= $ph['ne_id']; ?>"
@@ -74,12 +79,63 @@
 
                             </tr>
                             <?php $x++; endforeach; ?>
-                        </tbody>
+                        </tbody>-->
                     </table>
-
-
                 </form>
             <?php endif; ?>
         </div>
     </div>
+    <script>
+        var tabel = null;
+        $(document).ready(function() {
+            tabel = $('#example-server-side').DataTable({
+                "processing": true,
+                "responsive":true,
+                "serverSide": true,
+                "ordering": true, // Set true agar bisa di sorting
+                "order": [[ 0, 'asc' ]], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
+                "ajax":
+                {
+                    "url": "<?= base_url('news/view_data_server_side');?>", // URL file untuk proses select datanya
+                    "type": "POST"
+                },
+                "deferRender": true,
+                "aLengthMenu": [[5, 10, 50],[ 5, 10, 50]], // Combobox Limit
+                "columns": [
+                    {   label: function() 
+                        {
+                            return '<input type="checkbox" onclick="' + $('input[name*=\'checkAll\']').prop('checked', this.checked);+'">';
+                             
+                        },
+                        data: "checkbox",
+                        orderable: false 
+                    },
+                    { 
+                        "label": "#", 
+                        "data": "ne_id"
+                    }, // Id News
+                    { 
+                        "label": "Image", 
+                        "data": "ne_img" 
+                    },  // TImage
+                    { 
+                        "label": "Title", 
+                        "data": "ne_title" 
+                    },  // Title
+                    { 
+                        "label": "Language", 
+                        "data": "ne_lang" 
+                    },  // Language
+                    { 
+                        "label": "Created", 
+                        "data": "ne_created" 
+                    },
+                    { 
+                        "data": "option",
+                        "label": "Options",
+                    }, 
+                ],
+            });
+        });
+    </script>    
 </div>

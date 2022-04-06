@@ -12,8 +12,7 @@ class News extends Front_end
         $this->load->library('form_validation');
         $this->load->library('upload');
         $this->lang->load('news');
-
-
+        
     }
 
 
@@ -21,9 +20,24 @@ class News extends Front_end
     function index()
     {
         $data['news'] = $this->news_model->get_all();
-
         $this->view('content/news_page', $data);
     }
+
+    function login(){
+        $data['news'] = $this->news_model->get_all();
+        $this->view('theme/login_form', $data);
+    }
+
+    function register(){
+        $data['news'] = $this->news_model->get_all();
+        $this->view('theme/register_form', $data);
+    }
+    
+    function dashboard(){
+        $data['news'] = $this->news_model->get_all();
+        $this->view('theme/dashboard', $data);
+    }
+    
 
     // this function to handle getting all news
     function news_list()
@@ -67,10 +81,12 @@ class News extends Front_end
         $this->form_validation->set_rules('ne_title',lang('ne_title'), 'trim|required|htmlspecialchars');
         $this->form_validation->set_rules('ne_desc',lang('ne_desc'), 'trim|required|htmlspecialchars');
 
+        // print_r('File: asddaw');
        if ($this->form_validation->run($this) == FALSE) {
             $this->view('content/news_edit', $data);
         } else {
             if (!empty($_FILES['files']['name'])) {
+
                 $files_url = $this->upload_file('files');
                 if ($data['files']->ne_img != null) {
                     if (file_exists(PUBPATH . "global/uploads/" . $data['files']->ne_img)) {
@@ -120,6 +136,93 @@ class News extends Front_end
             redirect('news/news_list');
         }
     }
+
+    public function view_data_server_side() {
+        header('Content-Type: application/json');
+        $search = $this->input->post('search') ? $this->input->post('search'):'';
+        echo json_encode($this->news_model->get_tables_news($search));
+    }
+
+    public function title_validation() {
+        header('Content-Type: application/json');
+        $result = count($this->news_model->get_news_by_title($this->input->get('ne_title'))) > 0 ? "":"true";
+        echo json_encode($result);
+    }
+
+    /*
+    public function view_data_server_side_home() {
+        header('Content-Type: application/json');
+        $search = $this->input->post('search') ? $this->input->post('search'):'';
+        echo json_encode($this->news_model->get_tables_news_home($search));
+    }
+    */
+
+    public function ajax_test() {
+        header('Content-Type: application/json');
+        $search = $this->news_model->get_all();
+        echo json_encode($search);
+    }
+
+    //login
+    function login_act(){
+
+		$username = $this->input->post('username');
+		$password = $this->input->post('password');
+		$where = array(
+			'username' => $username,
+			'password' => md5($password)
+			);
+		$cek = $this->news_model->get_table("admin",$where)->num_rows();
+		if($cek > 0){
+ 
+			$data_session = array(
+				'nama' => $username,
+				'logged_in' => 1
+				);
+ 
+			$this->session->set_userdata($data_session);
+
+			redirect(base_url("admin"));
+ 
+		}else{
+            echo "Your username(",$username,") and/or password is incorrect ";
+            echo "You will be return after 5 second";
+            $this->output->set_header('refresh:5; url=login');
+		}
+	}
+    
+    function logout(){
+		$this->session->sess_destroy();
+		redirect(base_url('news/login'));
+	}
+
+    public function register_act(){
+        
+
+        $data = array(
+            'username'     => $this->input->post('username'),
+            'password'     => md5($this->input->post('password')),    
+        );
+
+        //insert data via model
+        $register = $this->news_model->insert_table("admin",$data);
+
+        //cek apakah data berhasil tersimpan
+        if($register) {
+
+            echo "success";
+
+        } else {
+
+            echo "error";
+
+        }
+
+    }
+
+    
+	
+    
 
 }
 /* End of file news.php */

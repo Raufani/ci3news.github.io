@@ -15,7 +15,7 @@ $config['modules_locations'] = array(
 |	http://example.com/
 |  
 */
-$config['base_url']	= "http://localhost/multi-language-website-codeigniter/";
+$config['base_url']	= "http://localhost/codeigniter-test";
 /*
 |--------------------------------------------------------------------------
 | Index File
@@ -352,10 +352,12 @@ $config['rewrite_short_tags'] = TRUE;
 */
 $config['proxy_ips'] = '';
 
-function __autoload($class) {
+function autoload($class) {
     if (file_exists(APPPATH."core/".$class.'.php')) {
         include_once(APPPATH."core/".$class.'.php');
     }
 }
+
+spl_autoload_register('autoload');
 /* End of file config.php */
 /* Location: ./application/config/config.php */

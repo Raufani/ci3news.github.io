@@ -44,7 +44,7 @@ if (!defined('BASEPATH'))
  */
 
 $autoload['libraries'] = array('database','session');
-$autoload['packages'] = array();
+$autoload['packages'] = array('url');
 
 /*
   | -------------------------------------------------------------------

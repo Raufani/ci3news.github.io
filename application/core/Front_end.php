@@ -12,7 +12,7 @@ class Front_end extends CI_Controller {
     /***
      * pages of site in menu
      */
-
+    
     function __construct() {
         parent::__construct();
         $this->load_lang();

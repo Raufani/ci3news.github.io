@@ -21,14 +21,36 @@
 <body>
 
 <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
-    <a class="navbar-brand" href="#">multi-language-website-codeigniter</a>
+    <a class="navbar-brand" href="#">Breaking News</a>
     <ul class="nav navbar-nav">
         <li class="nav-item active">
             <a class="nav-link" href="<?= base_url() ?>">Home <span class="sr-only"><?= lang('current') ?></span></a>
         </li>
+
+        <?php if($this->session->userdata('logged_in') == 1) : ?>
+            <li class="nav-item active">
+                <a class="nav-link" href="<?= base_url() ?>news/news_list">Admin<span class="sr-only"><?= lang('current') ?></span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="<?= base_url() ?>news/dashboard">Dashboard<span class="sr-only"><?= lang('current') ?></span></a>
+            </li>
+        <?php endif;?>
+
+        <?php if($this->session->userdata('logged_in') != 1) : ?>
+            <li class="nav-item active">
+                <a class="nav-link" href="<?= base_url() ?>news/login">Login<span class="sr-only"><?= lang('current') ?></span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="<?= base_url() ?>news/register">Register<span class="sr-only"><?= lang('current') ?></span></a>
+            </li>
+        <?php endif;?>
+
+
         <li class="nav-item active">
-            <a class="nav-link" href="<?= base_url() ?>news/news_list">admin <span class="sr-only"><?= lang('current') ?></span></a>
+            <a class="nav-link" href="<?= base_url() ?>news/reporter">Reporter<span class="sr-only"><?= lang('current') ?></span></a>
         </li>
+
+
         <li class="nav-item">
             <a class="nav-link" href="http://webeasystep.com/about"><?= lang('About') ?></a>
         </li>
