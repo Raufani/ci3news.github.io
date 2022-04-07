@@ -2,7 +2,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.12/datatables.min.css"/>
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.12/datatables.min.js"></script>
 
-<h2>News Table</h2>
+<h2>Reporter Table</h2>
 <script>
     $(document).ready(function() {
         $('#example').DataTable();
@@ -14,23 +14,12 @@
 <table class="table" id="example-server-side">
     <thead>
     <tr>
-        <th><?= lang('ne_title') ?></th>
-        <th><?= lang('ne_desc') ?></th>
-        <th><?= lang('ne_img') ?></th>
+        <th>ID</th>
+        <th>Reporter Name</th>
+        <th>ID news</th>
     </tr>
     </thead>
 
-    <!--<tbody>
-    <?php foreach ($news as $n) : ?>
-    <tr>
-        <td><a href="<?= base_url() ?>news/show_one/<?= $n['ne_id']; ?>"><?= $n['ne_title']; ?></a></td>
-        <td><?= implode(' ', array_slice(explode(' ', $n['ne_desc']), 0, 15));; ?></td>
-        <td><img src="<?php echo base_url(); ?>global/uploads/<?= $n['ne_img']; ?>"/>
-        </td>
-    </tr>
-    </tbody>
-    <?php endforeach ?>-->
-    
 </table>
 <script>
     var tabel = null;
@@ -43,23 +32,23 @@
             "order": [[ 0, 'asc' ]], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
             "ajax":
             {
-                "url": "<?= base_url('news/view_data_server_side');?>", // URL file untuk proses select datanya
+                "url": "<?= base_url('news/view_data_server_side_reporter');?>", // URL file untuk proses select datanya
                 "type": "POST"
             },
             "deferRender": true,
             "aLengthMenu": [[5, 10, 50],[ 5, 10, 50]], // Combobox Limit
             "columns": [
                 { 
-                    "label": "Title", 
-                    "data": "ne_title" 
+                    "label": "#", 
+                    "data": "id" 
                 },  // Tampilkan penulis
                 { 
-                    "label": "Description", 
-                    "data": "ne_desc" 
+                    "label": "Reporter Name", 
+                    "data": "reporter_name" 
                 },  // Tampilkan tgl posting
                 { 
-                    "label": "Image", 
-                    "data": "ne_img" 
+                    "label": "Id News", 
+                    "data": "id_news" 
                 },
             ],
         });

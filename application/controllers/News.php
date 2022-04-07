@@ -38,6 +38,10 @@ class News extends Front_end
         $this->view('theme/dashboard', $data);
     }
     
+    function reporter(){
+        $data['news'] = $this->news_model->get_all();
+        $this->view('content/news_reporter', $data);
+    }
 
     // this function to handle getting all news
     function news_list()
@@ -48,11 +52,20 @@ class News extends Front_end
     /* this function to handle getting
       news details */
 
+    //show ci_news
     function show_one($ne_id)
     {
         // get a post news based on news id
         $data['news'] = $this->news_model->get_one($ne_id);
         $this->view('content/show_one', $data);
+    }
+
+    //show reporter
+    function show_reporter($id)
+    {
+        // get a post news based on news id
+        $data['news'] = $this->news_model->get_reporter($id);
+        $this->view('content/show_reporter', $data);
     }
 
     function create()
@@ -137,10 +150,18 @@ class News extends Front_end
         }
     }
 
+    //dss ci_news
     public function view_data_server_side() {
         header('Content-Type: application/json');
         $search = $this->input->post('search') ? $this->input->post('search'):'';
         echo json_encode($this->news_model->get_tables_news($search));
+    }
+
+    //dss reporter
+    public function view_data_server_side_reporter() {
+        header('Content-Type: application/json');
+        $search = $this->input->post('search') ? $this->input->post('search'):'';
+        echo json_encode($this->news_model->get_tables_reporter($search));
     }
 
     public function title_validation() {
@@ -149,47 +170,44 @@ class News extends Front_end
         echo json_encode($result);
     }
 
-    /*
-    public function view_data_server_side_home() {
-        header('Content-Type: application/json');
-        $search = $this->input->post('search') ? $this->input->post('search'):'';
-        echo json_encode($this->news_model->get_tables_news_home($search));
-    }
-    */
+    function login_acts(){
 
-    public function ajax_test() {
-        header('Content-Type: application/json');
-        $search = $this->news_model->get_all();
-        echo json_encode($search);
-    }
+        $this->form_validation->set_rules('username', 'Username', 'required|max_length[128]');
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|max_length[24]');
 
-    //login
-    function login_act(){
-
-		$username = $this->input->post('username');
-		$password = $this->input->post('password');
-		$where = array(
-			'username' => $username,
-			'password' => md5($password)
-			);
-		$cek = $this->news_model->get_table("admin",$where)->num_rows();
-		if($cek > 0){
- 
-			$data_session = array(
-				'nama' => $username,
-				'logged_in' => 1
-				);
- 
-			$this->session->set_userdata($data_session);
-
-			redirect(base_url("admin"));
- 
-		}else{
+        if($this->form_validation->run() === FALSE){   
             echo "Your username(",$username,") and/or password is incorrect ";
-            echo "You will be return after 5 second";
-            $this->output->set_header('refresh:5; url=login');
-		}
-	}
+            echo "You will be return after 5 second";                
+            redirect(base_url('news/login'));
+                
+        } else {
+            $username = $this->input->post('username');
+            $password = $this->input->post('password');
+            $where = array(
+                'username' => $username,
+                'password' => md5($password)
+                );
+            $cek = $this->news_model->get_table("admin",$where)->num_rows();
+            if($cek > 0){
+    
+                $data_session = array(
+                    'nama' => $username,
+                    'logged_in' => 1
+                    );
+    
+                $this->session->set_userdata($data_session);
+
+                redirect(base_url("admin"));
+    
+            }else{
+                echo "Your username(",$username,") and/or password is incorrect ";
+                echo "You will be return after 5 second";
+                $this->output->set_header('refresh:5; url=login');
+            }
+             
+        }
+    }
+
     
     function logout(){
 		$this->session->sess_destroy();
@@ -219,8 +237,51 @@ class News extends Front_end
         }
 
     }
-
     
+
+    public function ajax_test() {
+        header('Content-Type: application/json');
+        $search = $this->news_model->get_all();
+        echo json_encode($search);
+    }
+
+
+    /*
+    public function view_data_server_side_home() {
+        header('Content-Type: application/json');
+        $search = $this->input->post('search') ? $this->input->post('search'):'';
+        echo json_encode($this->news_model->get_tables_news_home($search));
+    }
+    */
+
+    /*
+    //login
+    function login_act(){
+		$username = $this->input->post('username');
+		$password = $this->input->post('password');
+		$where = array(
+			'username' => $username,
+			'password' => md5($password)
+			);
+		$cek = $this->news_model->get_table("admin",$where)->num_rows();
+		if($cek > 0){
+ 
+			$data_session = array(
+				'nama' => $username,
+				'logged_in' => 1
+				);
+ 
+			$this->session->set_userdata($data_session);
+
+			redirect(base_url("admin"));
+ 
+		}else{
+            echo "Your username(",$username,") and/or password is incorrect ";
+            echo "You will be return after 5 second";
+            $this->output->set_header('refresh:5; url=login');
+		}
+	}
+    */
 	
     
 

@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
 
+<html lang="en">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/additional-methods.min.js"></script>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,13 +16,14 @@
         <link href="<?= base_url()?>global/admin/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Custom styles for this template -->
         <link href="<?= base_url()?>global/admin/signin.css" rel="stylesheet">
+        
     </head>
 
     <body>
 
     <div class="container">
 
-        <form class="form-signin" id=login-form action="<?php echo base_url('news/login_act'); ?>" method="post">
+        <form class="form-signin" id=login-form action="<?php echo base_url('news/login_acts'); ?>" method="post">
             <h2 class="form-signin-heading">Please sign in</h2>
             <label for="inputEmail" class="sr-only">Email address</label>
             <input type="email" name="username" id="username" class="form-control" placeholder="Email address" required>
@@ -35,29 +39,34 @@
 
     </div> <!-- /container -->
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/additional-methods.min.js"></script>
+    
 
     <script>
         $(document).ready(function() {
-            $("#login_form").validate({
+            $("#login-form").validate({
                 rules: {
                     username:{
                         required: true,
-                        email: true
+                        email: true,
+                        minlength: 6
                     },
                     password:{
-                        minlegth: 6
+                        required: true,
+                        minlength: 6,
+                        maxlength: 24
                     },
                 },
                 messages: {
                     username: {
-                        remote: 'Username should be email, which include "@" char'
-                    }
-                    pasword: {
-                        remote: 'min length is 6'
-                    }
+                        required: "Please, input username",
+                        email: "Username must email",
+                        minlength: "Username at least 6 characters"
+                    },
+                    password: {
+                        required: "Please input password",
+                        minlength: "Password at least 6 characters",
+                        maxlength: "Password max length 24 characters"
+                    },
                 },
             
             });

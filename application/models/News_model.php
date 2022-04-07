@@ -32,6 +32,13 @@ class News_model extends CI_Model
         return $result->row();
     }
 
+    //get one reporter article by its id
+    function get_reporter($id) {
+        $this->db->where('id', $id);
+        $result = $this->db->get('reporter');
+        return $result->row();
+    }
+
 
     function create($file)
     {
@@ -87,6 +94,8 @@ class News_model extends CI_Model
     }
     */
 
+
+    //get table ci_news
     function get_tables_news($search) {
         // $query='';
         if (isset($search['value']) && $search['value'] != '') {
@@ -132,13 +141,29 @@ class News_model extends CI_Model
         return $callback;
     }
 
-    function get_news_by_title($title) {
-        return $this->db->where('ne_title', $title)->get('ci_news')->result_array();
+    //get table reporter
+    function get_tables_reporter($search) {
+        if (isset($search['value']) && $search['value'] != '') {
+            $this->db->like('reporter', $search['value']);
+        } 
+        $sql_count = $this->db->count_all('reporter');
+        // }
+        $sql_filter_count = $this->db->count_all_results('reporter');
+        $data = $this->db->get('reporter')->result_array();
+        // print_r($data);
+        $callback = array(    
+            'draw' => isset($_POST['draw']) ? $_POST['draw'] : '', // Ini dari datatablenya    
+            'recordsTotal' => $sql_count,    
+            'recordsFiltered'=>$sql_filter_count,    
+            'data'=>$data
+        );
+        return $callback;
     }
 
 
-
-    
+    function get_news_by_title($title) {
+        return $this->db->where('ne_title', $title)->get('ci_news')->result_array();
+    }
 
     //login
     function get_table($table,$where){		
