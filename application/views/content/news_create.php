@@ -8,7 +8,7 @@
     <div class="col-sm-9 col-sm-offset-3 col-md-6 col-md-offset-2 main">
         <h1 class="page-header">Add File</h1>
 
-        <form enctype="multipart/form-data" method="post" action="<?= current_url() ?>">
+        <form enctype="multipart/form-data" method="post" action="" id="main_form">
 
             <div class="form-group">
                 <label for="lang" class="control-label">language</label>
@@ -41,6 +41,49 @@
             </div>
         </form>
     </div>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/additional-methods.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let validator = $("#main_form").validate({
+                rules: {
+                    ne_title:{
+                        required: true,
+                        minlength: 6,
+                        remote:{
+                            async:false,
+                            url: "<?= base_url() . 'news/title_validation'?>",
+                            data: {
+                                field: 'ne_title',
+                                value_current: function() { return $("input[name=ne_title]").val(); }
+                            }
+                        }
+                    },
+                    ne_desc:{
+                        required: true,
+                        minlength: 10,
+                        maxlength: 512
+                    },
+                    files: {
+                        required: true,
+                    }
+                },
+                messages: {
+                    ne_title: {
+                        remote: 'Title already exist!'
+                    }
+                },
+                onfocusout: function(elem) {
+                    return this.element(elem);
+                }
+            });
+
+            $("#main_form .form-control").blur(function() {
+                $("#main_form").valid();
+            })
+        })
+    </script>
 </div>
 
 

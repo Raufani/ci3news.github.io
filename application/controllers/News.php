@@ -9,6 +9,7 @@ class News extends Front_end
     {
         parent::__construct();
         $this->load->model('news_model');
+        $this->load->model('News_Filter_Model');
         $this->load->library('form_validation');
         $this->load->library('upload');
         $this->lang->load('news');
@@ -154,7 +155,7 @@ class News extends Front_end
     public function view_data_server_side() {
         header('Content-Type: application/json');
         $search = $this->input->post('search') ? $this->input->post('search'):'';
-        echo json_encode($this->news_model->get_tables_news($search));
+        echo json_encode($this->news_model->get_tables_news($search['value']));
     }
 
     //dss reporter
@@ -164,6 +165,13 @@ class News extends Front_end
         echo json_encode($this->news_model->get_tables_reporter($search));
     }
 
+    
+
+    public function username_validation() {
+        header('Content-Type: application/json');
+        $result = count($this->news_model->get_username_by_title($this->input->get('username'))) > 0 ? "":"true";
+        echo json_encode($result);
+    }
     public function title_validation() {
         header('Content-Type: application/json');
         $result = count($this->news_model->get_news_by_title($this->input->get('ne_title'))) > 0 ? "":"true";
@@ -221,9 +229,26 @@ class News extends Front_end
             'username'     => $this->input->post('username'),
             'password'     => md5($this->input->post('password')),    
         );
-
+        
+        $count = $this->db->count_all('admin');
+        if($count < 3){
+            $register = $this->news_model->insert_table("admin",$data);
+        } else{
+            echo "false";
+        }
+        /*
+        $num_rows = $this->db->get('admin');
+        echo $query->num_rows();
+        if ($query->num_rows() > 0){
+            echo "Your username(",$num_rows,") and/or password is incorrect ";
+        } else{
+            
+            
+            $this->output->set_header('refresh:5; url=login');
+        }
+        */
         //insert data via model
-        $register = $this->news_model->insert_table("admin",$data);
+        
 
         //cek apakah data berhasil tersimpan
         if($register) {

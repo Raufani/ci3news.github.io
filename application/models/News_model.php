@@ -98,18 +98,24 @@ class News_model extends CI_Model
     //get table ci_news
     function get_tables_news($search) {
         // $query='';
-        if (isset($search['value']) && $search['value'] != '') {
-            $this->db->like('ne_title', $search['value']);
-        } 
-        $sql_count = $this->db->count_all('ci_news');
+        
+        
         // if ($_POST['order'][0]['column'] && $_POST['order'][0]['dir']) {
         //     $order_field = $_POST['order'][0]['column'];
         //     $order_ascdesc = $_POST['order'][0]['dir']; 
         //     $query->order_by($_POST['columns'][$order_field]['data'], $order_ascdesc);
         $this->db->where('ne_lang', $this->lang);
+
+        if (isset($search) && $search != '') {
+            $this->db->like('ne_title', $search);
+            $this->db->where("(ne_title LIKE '%" . $search . "%')", NULL, FALSE);
+        } 
         // }
+        $data = $this->db->get_where('ci_news', array('ne_lang' => 'en'))->result_array();
+        //$data = $this->db->get('ci_news')->result_array();
+        $this->db->where('ne_lang', $this->lang);
         $sql_filter_count = $this->db->count_all_results('ci_news');
-        $data = $this->db->get('ci_news')->result_array();
+        $sql_count = $this->db->count_all('ci_news');
         // print_r($data);
         foreach($data as $key => $value) {
             $data[$key]['option'] = 
@@ -160,7 +166,9 @@ class News_model extends CI_Model
         return $callback;
     }
 
-
+    function get_username_by_title($title) {
+        return $this->db->where('username', $title)->get('admin')->result_array();
+    }
     function get_news_by_title($title) {
         return $this->db->where('ne_title', $title)->get('ci_news')->result_array();
     }

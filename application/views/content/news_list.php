@@ -92,8 +92,9 @@
                 "processing": true,
                 "responsive":true,
                 "serverSide": true,
+                "paging": true,
                 "ordering": true, // Set true agar bisa di sorting
-                "order": [[ 0, 'asc' ]], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
+                "order": [[ 3, 'desc' ]], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
                 "ajax":
                 {
                     "url": "<?= base_url('news/view_data_server_side');?>", // URL file untuk proses select datanya
@@ -101,6 +102,17 @@
                 },
                 "deferRender": true,
                 "aLengthMenu": [[5, 10, 50],[ 5, 10, 50]], // Combobox Limit
+                "columnDefs": [
+                    { 
+                        "targets": [ 3 ], 
+                        "orderable": true, 
+                        
+                    },
+                    { 
+                        "targets": [ 0, 1, 2, 4, 5, 6 ], 
+                        "orderable": false, 
+                    },
+                ],
                 "columns": [
                     {   label: function() 
                         {
@@ -112,7 +124,8 @@
                     },
                     { 
                         "label": "#", 
-                        "data": "ne_id"
+                        "data": "ne_id",
+                        
                     }, // Id News
                     { 
                         "label": "Image", 
@@ -120,7 +133,7 @@
                     },  // TImage
                     { 
                         "label": "Title", 
-                        "data": "ne_title" 
+                        "data": "ne_title", 
                     },  // Title
                     { 
                         "label": "Language", 
